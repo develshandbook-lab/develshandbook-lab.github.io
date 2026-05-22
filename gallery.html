@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Retro Station // Profile</title>
+    <style>
+        /* 1. UPGRADED MAIN BACKGROUND: Image now spans the entire browser viewport */
+        body {
+            background-image: linear-gradient(to bottom, rgba(20, 28, 38, 0.4), rgba(18, 26, 36, 0.7)), url('images/ff7_rebith.png');
+            background-size: cover;
+            background-position: center top;
+            background-attachment: fixed; /* Keeps the background locked solid while you scroll your dashboard */
+            background-repeat: no-repeat;
+            color: #c7d5e0;
+            font-family: "Motiva Sans", Arial, sans-serif;
+            margin: 0;
+            padding: 40px 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        /* 2. CENTRAL CONTAINER ADJUSTMENT: Made translucent so the background image shows through perfectly */
+        .profile-container {
+            width: 950px;
+            background: rgba(23, 32, 45, 0.75); /* Semi-transparent backing slate */
+            border: 1px solid rgba(42, 63, 90, 0.6);
+            border-radius: 4px;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.9);
+            padding: 24px;
+            box-sizing: border-box;
+            backdrop-filter: blur(4px); /* Adds a high-end glassy blur effect over the landscape behind it */
+        }
+
+        /* Profile Header Layout */
+        .profile-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(42, 63, 90, 0.5);
+            padding-bottom: 24px;
+            margin-bottom: 24px;
+            background: rgba(16, 24, 34, 0.6); /* Translucent backdrop for header elements */
+            padding: 15px;
+            border-radius: 4px;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        /* Neon Cyber Avatar Frame */
+        .avatar-holder {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            border-radius: 5px;
+            background: linear-gradient(135deg, #a041d8 0%, #66c0f4 100%);
+            padding: 4px;
+            box-shadow: 0 0 15px rgba(160, 65, 216, 0.4);
+            overflow: hidden;
+        }
+
+        .avatar-image {
+            width: 100%;
+            height: 100%;
+            background: #17202d;
+            border-radius: 3px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2.8rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .user-info h1 {
+            font-size: 26px;
+            color: #ffffff;
+            margin: 0 0 8px 0;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        /* Interactive Power Toggle Panel */
+        .power-panel {
+            text-align: right;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 8px;
+        }
+
+        .switch-label {
+            font-size: 11px;
+            color: #8f98a0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .switch-btn {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 30px;
+        }
+
+        .switch-btn input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #2a3f5a;
+            transition: .3s;
+            border-radius: 34px;
+            border: 1px solid #4e80a0;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 4px;
+            bottom: 4px;
+            background-color: #8f98a0;
+            transition: .3s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: #1b2838;
+            border-color: #66c0f4;
+            box-shadow: 0 0 10px rgba(102, 192, 244, 0.4);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(30px);
+            background-color: #66c0f4;
+            box-shadow: 0 0 8px #66c0f4;
+        }
+
+        /* Content Showcases */
+        .showcase-block {
+            background: linear-gradient(to right, rgba(20, 31, 44, 0.85) 0%, rgba(15, 23, 32, 0.85) 100%);
+            border: 1px solid #233244;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+
+        .showcase-header {
+            background: rgba(31, 48, 69, 0.7);
+            padding: 10px 14px;
+            font-size: 13px;
+            color: #66c0f4;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-bottom: 1px solid #233244;
+            font-weight: bold;
+        }
+
+        .showcase-content {
+            padding: 20px;
+        }
+
+        /* Grid Network & Game Cards */
+        .game-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(165px, 1fr));
+            gap: 16px;
+        }
+
+        .launch-link {
+            text-decoration: none;
+            pointer-events: none; /* Locked by default until system grid is powered ON */
+            opacity: 0.25;
+            transition: all 0.3s ease;
+        }
+
+        /* CSS Logic: When power switch is checked, unlock grid interactivity */
+        body:has(input:checked) .launch-link {
+            pointer-events: auto;
+            opacity: 1;
+        }
+
+        .game-card {
+            background: #10161f;
+            border: 1px solid #202c3d;
+            border-radius: 4px;
+            overflow: hidden;
+            padding-bottom: 12px;
+            text-align: center;
+            transition: all 0.2s ease;
+        }
+
+        body:has(input:checked) .game-card:hover {
+            border-color: #66c0f4;
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(102, 192, 244, 0.15);
+        }
+
+        .game-art {
+            width: 100%;
+            height: 200px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2.5rem;
+            border-bottom: 1px solid #202c3d;
+        }
+
+        .game-title {
+            font-size: 13px;
+            color: #fff;
+            margin: 10px 8px 4px 8px;
+            font-weight: bold;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .game-status-label {
+            font-size: 11px;
+            color: #66c0f4;
+            text-transform: uppercase;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+        }
+
+        /* =========================================================================
+           👾 VIRTUAL PET INTERFACE FRAMEWORK
+           ========================================================================= */
+        .pet-pod {
+            width: 180px;
+            height: 180px;
+            background: linear-gradient(135deg, #2a3f5a 0%, #17202d 100%);
+            border: 3px solid #4e80a0;
+            border-radius: 50% 50% 40% 40%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.6), inset 0 0 15px rgba(102,192,244,0.3);
+        }
+
+        .pet-screen {
+            width: 120px;
+            height: 100px;
+            background-color: #072013;
+            border: 4px solid #10161f;
+            border-radius: 8px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: inset 0 0 15px rgba(0, 255, 100, 0.4);
+        }
+
+        .virtual-pet {
+            width: 45px;
+            height: 45px;
+            background: #39ff14;
+            border-radius: 12px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 0 15px #39ff14;
+            animation: petFloat 3s ease-in-out infinite;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .pet-eyes {
+            display: flex;
+            gap: 12px;
+        }
+
+        .eye {
+            width: 6px;
+            height: 6px;
+            background: #072013;
+            border-radius: 50%;
+            animation: petBlink 4s infinite;
+        }
+
+        .pet-mouth {
+            width: 14px;
+            height: 5px;
+            border-bottom: 3px solid #072013;
+            border-radius: 0 0 10px 10px;
+            transition: all 0.2s ease;
+        }
+
+        .virtual-pet:hover {
+            background: #00ffff;
+            box-shadow: 0 0 25px #00ffff;
+            transform: scale(1.1);
+        }
+        .virtual-pet:hover .eye {
+            background: #041424;
+            animation: none;
+        }
+        .virtual-pet:hover .pet-mouth {
+            border-bottom-color: #041424;
+            width: 18px;
+            height: 8px;
+        }
+
+        .virtual-pet:active {
+            transform: scale(0.9) translateY(5px);
+        }
+
+        /* =========================================================================
+           🧬 EMBEDDED KEYFRAME ANIMATIONS
+           ========================================================================= */
+        @keyframes radarRotate {
+            100% { transform: rotate(360deg); }
+        }
+        @keyframes swimLeftToRight {
+            0%   { left: -50px; transform: scaleX(1); }
+            100% { left: 100%; transform: scaleX(1); }
+        }
+        @keyframes swimRightToLeft {
+            0%   { right: -50px; transform: scaleX(1); }
+            100% { right: 100%; transform: scaleX(1); }
+        }
+        @keyframes floatUp {
+            0%   { bottom: -10px; opacity: 1; }
+            100% { bottom: 100%; opacity: 0; transform: translateX(15px); }
+        }
+        @keyframes petFloat {
+            0%, 100% { transform: translateY(0); }
+            50%      { transform: translateY(-12px); }
+        }
+        @keyframes petBlink {
+            0%, 45%, 55%, 100% { transform: scaleY(1); }
+            50%                { transform: scaleY(0.1); }
+        }
+    </style>
+</head>
+<body>
+
+<div class="profile-container">
+
+    <header class="profile-header">
+        <div class="header-left">
+            <div class="avatar-holder">
+                <div class="avatar-image">🥷</div>
+                <div style="position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: conic-gradient(#00ffff, #a041d8, transparent 60%); animation: radarRotate 4s linear infinite; z-index: 1;"></div>
+            </div>
+            <div class="user-info">
+                <h1>Hidan_Assassin</h1>
+                <p style="color: #8f98a0; margin: 0; font-size: 14px;">Local Command Dashboard</p>
+            </div>
+        </div>
+
+        <div class="power-panel">
+            <span class="switch-label">System Grid Power</span>
+            <label class="switch-btn">
+                <input type="checkbox" id="power-toggle">
+                <span class="slider"></span>
+            </label>
+        </div>
+    </header>
+
+    <section class="showcase-block">
+        <div class="showcase-header">Station Information // Bio</div>
+        <div class="showcase-content" style="line-height: 1.6; color: #acb2b8; font-size: 14px; margin: 0;">
+            Welcome to the main matrix. This local dashboard bypasses standard platform navigations, utilizing custom system application protocols to execute local software targets directly from a centralized station.
+        </div>
+    </section>
+
+    <section class="showcase-block">
+        <div class="showcase-header">🐠 Ambient Sub-System // Digital Aquarium</div>
+        <div class="showcase-content">
+            <div style="position: relative; width: 100%; height: 180px; background: linear-gradient(to bottom, #0a1b29, #050e14); border-radius: 4px; overflow: hidden; border: 1px solid #1a354a; box-shadow: inset 0 0 20px rgba(0, 242, 254, 0.2);">
+
+                <div style="position: absolute; top: 30%; font-size: 1.8rem; animation: swimLeftToRight 14s linear infinite; filter: drop-shadow(0 0 8px #ffaa00); z-index: 3;">🐠</div>
+                <div style="position: absolute; top: 55%; font-size: 1.5rem; animation: swimRightToLeft 19s linear infinite; filter: drop-shadow(0 0 8px #00ffff); z-index: 3;">🐟</div>
+
+                <div style="position: absolute; bottom: -10px; left: 20%; width: 4px; height: 4px; background: rgba(0, 242, 254, 0.4); border-radius: 50%; animation: floatUp 7s ease-in infinite; z-index: 1;"></div>
+                <div style="position: absolute; bottom: -10px; left: 70%; width: 6px; height: 6px; background: rgba(0, 242, 254, 0.3); border-radius: 50%; animation: floatUp 10s ease-in infinite; animation-delay: 3s; z-index: 1;"></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="showcase-block">
+        <div class="showcase-header">👾 Matrix Sub-System // Cyber Companion</div>
+        <div class="showcase-content" style="display: flex; justify-content: center; align-items: center; background: rgba(12, 17, 26, 0.6); padding: 20px; border-radius: 4px;">
+            <div class="pet-pod">
+                <div class="pet-screen">
+                    <div class="virtual-pet">
+                        <div class="pet-eyes">
+                            <div class="eye"></div>
+                            <div class="eye"></div>
+                        </div>
+                        <div class="pet-mouth"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="showcase-block">
+        <div class="showcase-header">Launcher Core // Desktop Integrations</div>
+        <div class="showcase-content">
+            <div class="game-grid">
+
+                <a href="steam://run/2101670" class="launch-link">
+                    <div class="game-card" style="border-bottom: 2px solid #a241d8;">
+                        <div class="game-art" style="background: linear-gradient(135deg, #250b3a, #0b0314); text-shadow: 0 0 10px #a241d8;">👾</div>
+                        <div class="game-title">Digimon Story: TS</div>
+                        <div class="game-status-label" style="color: #b693e6;">LAUNCH EXE</div>
+                    </div>
+                </a>
+
+                <a href="steam://run/237970" class="launch-link">
+                    <div class="game-card" style="border-bottom: 2px solid #ff2a5f;">
+                        <div class="game-art" style="background: linear-gradient(135deg, #3a0b18, #140307); text-shadow: 0 0 10px #ff2a5f;">🃏</div>
+                        <div class="game-title">Balatro</div>
+                        <div class="game-status-label" style="color: #ff577f;">LAUNCH EXE</div>
+                    </div>
+                </a>
+
+                <a href="steam://run/686060" class="launch-link">
+                    <div class="game-card" style="border-bottom: 2px solid #39ff14;">
+                        <div class="game-art" style="background: linear-gradient(135deg, #0b3a10, #031405); text-shadow: 0 0 10px #39ff14;">🐱</div>
+                        <div class="game-title">Mewgenics</div>
+                        <div class="game-status-label" style="color: #66ff4d;">LAUNCH EXE</div>
+                    </div>
+                </a>
+
+                <a href="steam://run/646570" class="launch-link">
+                    <div class="game-card" style="border-bottom: 2px solid #ff5500;">
+                        <div class="game-art" style="background: linear-gradient(135deg, #3a180b, #140703); text-shadow: 0 0 10px #ff5500;">⛰️</div>
+                        <div class="game-title">Slay the Spire</div>
+                        <div class="game-status-label" style="color: #ff7733;">LAUNCH EXE</div>
+                    </div>
+                </a>
+
+                <a href="steam://run/2868840" class="launch-link">
+                    <div class="game-card" style="border-bottom: 2px solid #00ffff;">
+                        <div class="game-art" style="background: linear-gradient(135deg, #0b313a, #031114); text-shadow: 0 0 10px #00ffff;">🔮</div>
+                        <div class="game-title">Slay the Spire 2</div>
+                        <div class="game-status-label" style="color: #33ffff;">LAUNCH EXE</div>
+                    </div>
+                </a>
+
+            </div>
+        </div>
+    </section>
+
+</div>
+
+<script>
+    function injectSteamTarget(title, appId, emoji, neonColor) {
+        const targetGrid = document.querySelector('.game-grid');
+        if (!targetGrid) return;
+
+        const linkAnchor = document.createElement('a');
+        linkAnchor.href = `steam://run/${appId}`;
+        linkAnchor.className = 'launch-link';
+
+        linkAnchor.innerHTML = `
+            <div class="game-card" style="border-bottom: 2px solid ${neonColor};">
+                <div class="game-art" style="background: linear-gradient(135deg, ${neonColor}22, #0d131a); text-shadow: 0 0 10px ${neonColor};">
+                    ${emoji}
+                </div>
+                <div class="game-title">${title}</div>
+                <div class="game-status-label" style="color: ${neonColor};">LAUNCH EXE</div>
+            </div>
+        `;
+
+        targetGrid.appendChild(linkAnchor);
+    }
+
+    // Dynamic additions
+    injectSteamTarget('Monster Hunter', '582010', '🍖', '#ff9900');
+    injectSteamTarget('Warframe', '230410', '🌌', '#00ccff');
+</script>
+
+</body>
+</html>
