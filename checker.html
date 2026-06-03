@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<body>
+<h3>Network Speed Test</h3>
+<button onclick="runTest()">Start Speed Test</button>
+<p id="result">Result: ---</p>
+
+<script>
+  async function runTest() {
+    // Use a file URL that you host yourself to avoid CORS issues
+    const fileUrl = "large-test-file.bin";
+    const fileSizeInBytes = 5 * 1024 * 1024; // 5MB in bytes
+    const startTime = performance.now();
+
+    try {
+      const response = await fetch(fileUrl + "?cache=" + Math.random());
+      await response.blob();
+      const endTime = performance.now();
+
+      const durationSeconds = (endTime - startTime) / 1000;
+      const bitsLoaded = fileSizeInBytes * 8;
+      const speedMbps = (bitsLoaded / durationSeconds / 1024 / 1024).toFixed(2);
+
+      document.getElementById("result").innerText =
+              "Estimated Speed: " + speedMbps + " Mbps";
+    } catch (error) {
+      document.getElementById("result").innerText = "Error: Could not measure speed.";
+    }
+  }
+</script>
+</body>
+</html>

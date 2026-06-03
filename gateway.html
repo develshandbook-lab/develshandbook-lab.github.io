@@ -1,0 +1,29 @@
+HTML
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Network Gateway // Ops</title>
+    <style>
+        body { background: #050505; color: #00ff41; font-family: 'Courier New', monospace; padding: 40px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
+        .card { border: 1px solid #00ff41; padding: 20px; text-align: center; transition: 0.3s; }
+        .card:hover { background: #00ff4122; cursor: pointer; }
+        a { color: inherit; text-decoration: none; }
+    </style>
+</head>
+<body>
+<h1>NETWORK_GATEWAY_ACTIVE</h1>
+<div class="grid">
+    <a href="http://192.168.1.XX:32400/web" target="_blank">
+        <div class="card"><h3>Plex Server</h3><p>Manage Media</p></div>
+    </a>
+    <a href="http://192.168.1.XX:5000" target="_blank">
+        <div class="card"><h3>NAS Storage</h3><p>File Management</p></div>
+    </a>
+    <a href="http://192.168.1.XX:8080" target="_blank">
+        <div class="card"><h3>Network Tools</h3><p>Audit/Logs</p></div>
+    </a>
+</div>
+</body>
+</html>
